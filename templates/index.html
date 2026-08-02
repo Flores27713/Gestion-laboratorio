@@ -91,6 +91,9 @@
         <button type="button" onclick="switchTab('stats')" id="nav-stats" class="px-4 py-2 rounded-xl text-xs font-semibold text-neutral-400 hover:text-white">
           📈 Reporte Semestre
         </button>
+        <button type="button" onclick="switchTab('shopping')" id="nav-shopping" class="px-4 py-2 rounded-xl text-xs font-semibold text-neutral-400 hover:text-white">
+          🛒 Listado de Compras
+        </button>
       </nav>
 
       <div class="flex items-center gap-2">
@@ -373,6 +376,45 @@
             <div id="stats-cost-breakdown" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <!-- JS -->
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL 6: SHOPPING LIST & REORDER -->
+    <section id="panel-shopping" class="tab-panel hidden space-y-6">
+      <div class="glass-panel p-6 rounded-3xl border border-neutral-800 space-y-6">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <span class="text-red-500">🛒</span> Listado de Compras y Reposición Automática
+            </h2>
+            <p class="text-xs text-neutral-400 mt-1">Generación de informes de insumos faltantes o dañados para el presupuesto del laboratorio.</p>
+          </div>
+          <a href="/api/export/shopping-list-csv" target="_blank" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-red-600/30 flex items-center gap-2">
+            📥 Exportar Orden de Compra (CSV/Excel)
+          </a>
+        </div>
+
+        <div class="glass-panel rounded-2xl overflow-hidden border border-neutral-800">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-neutral-900/90 text-neutral-400 border-b border-neutral-800 uppercase tracking-wider">
+                  <th class="p-3 font-semibold">ID</th>
+                  <th class="p-3 font-semibold">Artículo</th>
+                  <th class="p-3 font-semibold">Ubicación</th>
+                  <th class="p-3 font-semibold text-center">Stock Disponible</th>
+                  <th class="p-3 font-semibold text-center">En Mal Estado</th>
+                  <th class="p-3 font-semibold text-center text-red-400 font-bold">Cant. Sugerida a Comprar</th>
+                  <th class="p-3 font-semibold">Motivo de Reposición</th>
+                  <th class="p-3 font-semibold">Centro Costo</th>
+                </tr>
+              </thead>
+              <tbody id="shopping-tbody" class="divide-y divide-neutral-800/60">
+                <!-- JS -->
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -845,6 +887,30 @@
       `).join('');
     }
 
+    async function loadShoppingList() {
+      const res = await fetch('/api/shopping-list');
+      const items = await res.json();
+
+      const tbody = document.getElementById('shopping-tbody');
+      if (items.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-neutral-400 italic">✅ No hay insumos críticos que requieran compra o reposición en este momento.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = items.map(item => `
+        <tr class="hover:bg-neutral-900/40 transition-colors">
+          <td class="p-3 font-mono font-bold text-neutral-400">#${item.id}</td>
+          <td class="p-3 font-semibold text-white">${item.name}</td>
+          <td class="p-3 font-mono text-xs text-neutral-300">${item.location}</td>
+          <td class="p-3 text-center font-mono font-bold text-emerald-400">${item.avail}</td>
+          <td class="p-3 text-center font-mono font-bold text-red-400">${item.damaged}</td>
+          <td class="p-3 text-center font-mono font-extrabold text-red-500 bg-red-950/30 rounded-lg text-sm">+${item.suggested_qty} un.</td>
+          <td class="p-3"><span class="px-2 py-0.5 text-[10px] rounded font-medium bg-red-900/30 text-red-300 border border-red-800/40">${item.reason}</span></td>
+          <td class="p-3 text-neutral-300">${item.cost_center}</td>
+        </tr>
+      `).join('');
+    }
+
     function switchTab(tab) {
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
       document.getElementById(`panel-${tab}`).classList.remove('hidden');
@@ -854,6 +920,7 @@
       if (tab === 'request') { loadInventory(); loadRequisitionsHistory(); }
       if (tab === 'locations') loadLocations();
       if (tab === 'stats') loadStats();
+      if (tab === 'shopping') loadShoppingList();
     }
 
     function quickAdd(itemId) {
