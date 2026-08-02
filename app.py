@@ -2,7 +2,7 @@ import os
 import csv
 import io
 from typing import List, Optional
-from fastapi import FastAPI, Depends, Request, HTTPException, Response
+from fastapi import FastAPI, Depends, Request, HTTPException, Response, UploadFile, File
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -24,7 +24,7 @@ finally:
     db_session.close()
 
 app = FastAPI(
-    title="LabInventory Pro - App Web en Python",
+    title="Gestión de Laboratorio",
     description="Sistema de gestión de inventario y Ficha Digital de Solicitud para Laboratorio en FastAPI + SQLite.",
     version="2.0.0"
 )
@@ -77,21 +77,32 @@ def return_requisition_items(requisition_id: int, db: Session = Depends(get_db))
 def get_stats(db: Session = Depends(get_db)):
     return crud.get_semester_stats(db)
 
+@app.post("/api/inventory/upload-csv")
+async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)):
+    if not file.filename.lower().endswith(('.csv', '.txt')):
+        raise HTTPException(status_code=400, detail="Por favor suba un archivo de tipo CSV (.csv)")
+    contents = await file.read()
+    try:
+        csv_text = contents.decode('utf-8-sig')
+    except Exception:
+        csv_text = contents.decode('latin-1')
+    return crud.import_csv_data(db, csv_text)
+
 @app.get("/api/export/csv")
 def export_csv(db: Session = Depends(get_db)):
     items = crud.get_items(db)
     output = io.StringIO()
-    writer = csv.writer(output)
+    writer = csv.writer(output, delimiter=';')
     
-    writer.writerow(["ID", "NOMBRE ARTICULO", "UBICACION BODEGA", "STOCK TOTAL", "EN USO PRESTADO", "EN MAL ESTADO", "STOCK DISPONIBLE", "CENTRO DE COSTO", "CATEGORIA"])
+    writer.writerow(["ID", "Nombre del Artículo", "Ubicación Bodega", "Stock Total", "En Uso / Prestado", "En Mal Estado", "Stock Disponible", "Centro de Costo", "Categoría"])
     for i in items:
         writer.writerow([i.id, i.name, i.location, i.stock, i.in_use, i.damaged, i.avail, i.cost_center, i.category])
     
     output.seek(0)
     return StreamingResponse(
-        io.BytesIO(output.getvalue().encode("utf-8")),
-        media_type="text/csv",
-        headers={"Content-Disposition": "attachment; filename=inventario_laboratorio.csv"}
+        io.BytesIO(output.getvalue().encode("utf-8-sig")),
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": "attachment; filename=inventario_laboratorio_actualizado.csv"}
     )
 
 if __name__ == "__main__":

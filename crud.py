@@ -142,3 +142,83 @@ def get_semester_stats(db: Session):
         "top_items": top_items,
         "cost_breakdown": cost_breakdown
     }
+
+def import_csv_data(db: Session, csv_text: str):
+    import csv
+    import io
+
+    # Detect delimiter
+    delimiter = ';' if ';' in csv_text else ','
+    f = io.StringIO(csv_text.strip())
+    reader = csv.reader(f, delimiter=delimiter)
+
+    headers = next(reader, None)
+    if not headers:
+        raise HTTPException(status_code=400, detail="Archivo CSV vacío o inválido.")
+
+    imported_count = 0
+    updated_count = 0
+
+    for row in reader:
+        if not row or len(row) < 3:
+            continue
+        try:
+            # Format: ID, Nombre, Ubicación, Stock Total, En Uso, Mal Estado, Stock Disponible, Centro Costo
+            item_id = int(row[0].strip()) if row[0].strip().isdigit() else None
+            name = row[1].strip()
+            location = row[2].strip() if len(row) > 2 else "BODEGA"
+            stock = int(row[3].strip()) if len(row) > 3 and row[3].strip().isdigit() else 1
+            in_use = int(row[4].strip()) if len(row) > 4 and row[4].strip().isdigit() else 0
+            damaged = int(row[5].strip()) if len(row) > 5 and row[5].strip().isdigit() else 0
+            avail = int(row[6].strip()) if len(row) > 6 and row[6].strip().isdigit() else max(0, stock - in_use - damaged)
+            cost_center = row[7].strip() if len(row) > 7 else "Ambas Carreras"
+
+            # Auto category detection
+            category = "EQUIPOS"
+            lower_name = name.lower()
+            if any(k in lower_name for k in ["resistencia", "cable", "conector", "sensor", "módulo", "diodo", "transistor", "led", "capacitor"]):
+                category = "COMPONENTES"
+            elif any(k in lower_name for k in ["multímetro", "osciloscopio", "fuente", "generador", "cautín", "estación"]):
+                category = "EQUIPOS"
+            elif any(k in lower_name for k in ["alicate", "destornillador", "pinza", "llave", "corta"]):
+                category = "HERRAMIENTAS"
+            elif any(k in lower_name for k in ["alcohol", "guantes", "mascarilla", "aceite", "limpiador"]):
+                category = "INSUMOS"
+            elif any(k in lower_name for k in ["frasco", "vaso", "pipeta", "tubo", "matraz", "probeta"]):
+                category = "QUÍMICA Y VIDRIERÍA"
+
+            existing = None
+            if item_id:
+                existing = db.query(models.Item).filter(models.Item.id == item_id).first()
+            if not existing:
+                existing = db.query(models.Item).filter(models.Item.name == name).first()
+
+            if existing:
+                existing.name = name
+                existing.location = location
+                existing.stock = stock
+                existing.in_use = in_use
+                existing.damaged = damaged
+                existing.avail = avail
+                existing.cost_center = cost_center
+                existing.category = category
+                updated_count += 1
+            else:
+                new_item = models.Item(
+                    id=item_id,
+                    name=name,
+                    category=category,
+                    location=location,
+                    stock=stock,
+                    in_use=in_use,
+                    damaged=damaged,
+                    avail=avail,
+                    cost_center=cost_center
+                )
+                db.add(new_item)
+                imported_count += 1
+        except Exception:
+            continue
+
+    db.commit()
+    return {"status": "success", "imported": imported_count, "updated": updated_count}

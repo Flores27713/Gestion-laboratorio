@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>LabInventory Pro - Sistema de Gestión e Inspección Móvil de Laboratorio</title>
+  <title>Gestión de Laboratorio - Control de Inventario</title>
   
-  <meta name="theme-color" content="#090d16">
+  <meta name="theme-color" content="#0a0a0a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   
@@ -17,33 +17,33 @@
     
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #090d16;
-      color: #f1f5f9;
+      background-color: #0a0a0a;
+      color: #f8fafc;
       min-height: 100vh;
     }
     h1, h2, h3, h4, h5, h6 {
       font-family: 'Outfit', sans-serif;
     }
     .glass-panel {
-      background: rgba(15, 23, 42, 0.75);
+      background: rgba(23, 23, 23, 0.85);
       backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
     .glass-panel-glow {
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(23, 23, 23, 0.95);
       backdrop-filter: blur(16px);
-      border: 1px solid rgba(6, 182, 212, 0.3);
-      box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.15);
+      border: 1px solid rgba(220, 38, 38, 0.4);
+      box-shadow: 0 0 25px -5px rgba(220, 38, 38, 0.2);
     }
     .glass-input {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #f8fafc;
+      background: rgba(10, 10, 10, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ffffff;
     }
     .glass-input:focus {
       outline: none;
-      border-color: #06b6d4;
-      box-shadow: 0 0 12px rgba(6, 182, 212, 0.3);
+      border-color: #dc2626;
+      box-shadow: 0 0 12px rgba(220, 38, 38, 0.4);
     }
     @media print {
       body * { visibility: hidden; }
@@ -57,45 +57,48 @@
     }
   </style>
 </head>
-<body class="bg-[#090d16] text-slate-100 flex flex-col min-h-screen">
+<body class="bg-[#0a0a0a] text-slate-100 flex flex-col min-h-screen">
 
   <!-- Desktop & Tablet Header -->
-  <header class="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-3">
+  <header class="sticky top-0 z-40 bg-neutral-950/90 backdrop-blur-md border-b border-neutral-800 px-4 py-3">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 font-bold text-white text-xl">
-          ⚡
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-red-800 flex items-center justify-center shadow-lg shadow-red-600/30 font-bold text-white text-xl border border-red-500/40">
+          🧪
         </div>
         <div>
-          <h1 class="text-lg sm:text-xl font-extrabold bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">
-            LabInventory Pro
+          <h1 class="text-lg sm:text-xl font-extrabold text-white tracking-wide">
+            Gestión de Laboratorio
           </h1>
-          <p class="text-[11px] text-slate-400 hidden sm:block">App Web en Python (FastAPI + SQLite)</p>
+          <p class="text-[11px] text-neutral-400 hidden sm:block">Control de Inventario y Solicitud de Materiales</p>
         </div>
       </div>
 
       <!-- Desktop Nav Tabs -->
       <nav class="hidden md:flex items-center gap-2">
-        <button type="button" onclick="switchTab('dashboard')" id="nav-dashboard" class="px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-500/20 text-cyan-400 border border-cyan-500/40">
+        <button type="button" onclick="switchTab('dashboard')" id="nav-dashboard" class="px-4 py-2 rounded-xl text-xs font-semibold bg-red-600/20 text-red-400 border border-red-500/40">
           📊 Panel Principal
         </button>
-        <button type="button" onclick="switchTab('inventory')" id="nav-inventory" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-slate-200">
-          📦 Inventario (197)
+        <button type="button" onclick="switchTab('inventory')" id="nav-inventory" class="px-4 py-2 rounded-xl text-xs font-semibold text-neutral-400 hover:text-white">
+          📦 Inventario
         </button>
-        <button type="button" onclick="switchTab('request')" id="nav-request" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-slate-200">
+        <button type="button" onclick="switchTab('request')" id="nav-request" class="px-4 py-2 rounded-xl text-xs font-semibold text-neutral-400 hover:text-white">
           📝 Ficha de Solicitud
         </button>
-        <button type="button" onclick="switchTab('locations')" id="nav-locations" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-slate-200">
+        <button type="button" onclick="switchTab('locations')" id="nav-locations" class="px-4 py-2 rounded-xl text-xs font-semibold text-neutral-400 hover:text-white">
           📍 Bodegas
         </button>
-        <button type="button" onclick="switchTab('stats')" id="nav-stats" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-slate-200">
+        <button type="button" onclick="switchTab('stats')" id="nav-stats" class="px-4 py-2 rounded-xl text-xs font-semibold text-neutral-400 hover:text-white">
           📈 Reporte Semestre
         </button>
       </nav>
 
       <div class="flex items-center gap-2">
-        <a href="/api/export/csv" target="_blank" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 rounded-xl border border-slate-700 font-semibold flex items-center gap-1.5">
-          📥 Exportar CSV
+        <button onclick="openUploadModal()" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-xs text-white rounded-xl font-semibold flex items-center gap-1.5 shadow-md shadow-red-600/20 transition-all">
+          📂 Cargar Planilla CSV/Excel
+        </button>
+        <a href="/api/export/csv" target="_blank" class="px-3 py-1.5 bg-neutral-900 hover:bg-neutral-800 text-xs text-neutral-300 rounded-xl border border-neutral-700 font-semibold flex items-center gap-1.5">
+          📥 Exportar
         </a>
       </div>
     </div>
@@ -107,64 +110,69 @@
     <!-- PANEL 1: DASHBOARD -->
     <section id="panel-dashboard" class="tab-panel space-y-6">
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-        <div class="glass-panel p-4 rounded-2xl border border-slate-800">
-          <span class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold block">Total Artículos</span>
-          <span id="dash-total-items" class="text-2xl font-bold font-mono text-cyan-400 mt-1 block">197</span>
-          <span class="text-[10px] text-slate-500">en SQLite</span>
+        <div class="glass-panel p-4 rounded-2xl border border-neutral-800">
+          <span class="text-[11px] text-neutral-400 uppercase tracking-wider font-semibold block">Total Artículos</span>
+          <span id="dash-total-items" class="text-2xl font-bold font-mono text-white mt-1 block">197</span>
+          <span class="text-[10px] text-neutral-500">en catálogo</span>
         </div>
 
-        <div class="glass-panel p-4 rounded-2xl border border-slate-800">
-          <span class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold block">Unidades Físicas</span>
+        <div class="glass-panel p-4 rounded-2xl border border-neutral-800">
+          <span class="text-[11px] text-neutral-400 uppercase tracking-wider font-semibold block">Unidades Físicas</span>
           <span id="dash-total-units" class="text-2xl font-bold font-mono text-slate-100 mt-1 block">0</span>
-          <span class="text-[10px] text-slate-500">en bodegas</span>
+          <span class="text-[10px] text-neutral-500">en bodegas</span>
         </div>
 
-        <div class="glass-panel p-4 rounded-2xl border border-slate-800">
-          <span class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold block">Stock Disponible</span>
+        <div class="glass-panel p-4 rounded-2xl border border-neutral-800">
+          <span class="text-[11px] text-neutral-400 uppercase tracking-wider font-semibold block">Stock Disponible</span>
           <span id="dash-total-avail" class="text-2xl font-bold font-mono text-emerald-400 mt-1 block">0</span>
           <span class="text-[10px] text-emerald-500/80">listo para entregar</span>
         </div>
 
-        <div class="glass-panel p-4 rounded-2xl border border-slate-800">
-          <span class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold block">En Uso / Prestado</span>
+        <div class="glass-panel p-4 rounded-2xl border border-neutral-800">
+          <span class="text-[11px] text-neutral-400 uppercase tracking-wider font-semibold block">En Uso / Prestado</span>
           <span id="dash-total-inuse" class="text-2xl font-bold font-mono text-amber-400 mt-1 block">0</span>
           <span class="text-[10px] text-amber-500/80">en proyectos</span>
         </div>
 
-        <div class="glass-panel p-4 rounded-2xl border border-slate-800">
-          <span class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold block">En Mal Estado</span>
-          <span id="dash-total-damaged" class="text-2xl font-bold font-mono text-rose-400 mt-1 block">0</span>
-          <span class="text-[10px] text-rose-500/80">para reparación</span>
+        <div class="glass-panel p-4 rounded-2xl border border-neutral-800">
+          <span class="text-[11px] text-neutral-400 uppercase tracking-wider font-semibold block">En Mal Estado</span>
+          <span id="dash-total-damaged" class="text-2xl font-bold font-mono text-red-500 mt-1 block">0</span>
+          <span class="text-[10px] text-red-400/80">para reparación</span>
         </div>
 
-        <div class="glass-panel p-4 rounded-2xl border border-slate-800">
-          <span class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold block">Fichas Activas</span>
-          <span id="dash-active-reqs" class="text-2xl font-bold font-mono text-indigo-400 mt-1 block">0</span>
-          <span class="text-[10px] text-indigo-400/80">préstamos vigentes</span>
+        <div class="glass-panel p-4 rounded-2xl border border-neutral-800">
+          <span class="text-[11px] text-neutral-400 uppercase tracking-wider font-semibold block">Fichas Activas</span>
+          <span id="dash-active-reqs" class="text-2xl font-bold font-mono text-red-400 mt-1 block">0</span>
+          <span class="text-[10px] text-red-400/80">préstamos vigentes</span>
         </div>
       </div>
 
       <!-- Quick Action Mobile Callout -->
       <div class="glass-panel-glow p-5 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-2xl border border-cyan-500/30">
+          <div class="w-12 h-12 rounded-2xl bg-red-600/20 text-red-500 flex items-center justify-center text-2xl border border-red-500/30">
             📱
           </div>
           <div>
-            <h3 class="font-bold text-slate-100 text-base">Control de Inventario desde Celular</h3>
-            <p class="text-xs text-slate-400">Emite Fichas de Solicitud y descuenta el stock en tiempo real desde la API de FastAPI.</p>
+            <h3 class="font-bold text-white text-base">Gestión de Laboratorio desde Celular</h3>
+            <p class="text-xs text-neutral-400">Emite Fichas de Solicitud y descuenta el stock en tiempo real.</p>
           </div>
         </div>
-        <button type="button" onclick="switchTab('request')" class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-cyan-500/25 text-center">
-          + Nueva Ficha de Solicitud
-        </button>
+        <div class="flex gap-2 w-full sm:w-auto">
+          <button type="button" onclick="openUploadModal()" class="flex-1 sm:flex-initial px-4 py-2.5 bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-xs rounded-xl border border-neutral-700 text-center">
+            📂 Cargar CSV / Excel
+          </button>
+          <button type="button" onclick="switchTab('request')" class="flex-1 sm:flex-initial px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-red-600/30 text-center">
+            + Nueva Solicitud
+          </button>
+        </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Low Stock -->
-        <div class="glass-panel p-5 rounded-3xl border border-slate-800">
-          <h3 class="font-bold text-sm text-slate-200 mb-4 flex items-center gap-2">
-            <span class="text-rose-400">⚠️</span> Insumos Críticos o Agotados
+        <div class="glass-panel p-5 rounded-3xl border border-neutral-800">
+          <h3 class="font-bold text-sm text-neutral-200 mb-4 flex items-center gap-2">
+            <span class="text-red-500">⚠️</span> Insumos Críticos o Agotados
           </h3>
           <div id="dash-lowstock-list" class="space-y-2.5">
             <!-- JS -->
@@ -172,10 +180,10 @@
         </div>
 
         <!-- Recent Loans -->
-        <div class="glass-panel p-5 rounded-3xl border border-slate-800">
-          <h3 class="font-bold text-sm text-slate-200 mb-4 flex items-center justify-between">
+        <div class="glass-panel p-5 rounded-3xl border border-neutral-800">
+          <h3 class="font-bold text-sm text-neutral-200 mb-4 flex items-center justify-between">
             <span>📋 Últimas Fichas Emitidas</span>
-            <button onclick="switchTab('request')" class="text-xs text-cyan-400 font-semibold hover:underline">Ver todas &rarr;</button>
+            <button onclick="switchTab('request')" class="text-xs text-red-400 font-semibold hover:underline">Ver todas &rarr;</button>
           </h3>
           <div id="dash-recent-reqs" class="space-y-2.5">
             <!-- JS -->
@@ -198,10 +206,10 @@
             </select>
 
             <select id="filter-location" onchange="loadInventory()" class="glass-input text-xs px-3 py-2.5 rounded-xl">
-              <option value="TODAS">Ubicación (Todas)</option>
+              <option value="TODAS">Bodegas (Todas)</option>
             </select>
 
-            <select id="filter-cost" onchange="loadInventory()" class="glass-input text-xs px-3 py-2.5 rounded-xl">
+            <select id="filter-cost-center" onchange="loadInventory()" class="glass-input text-xs px-3 py-2.5 rounded-xl col-span-2 sm:col-span-1">
               <option value="TODOS">Centro Costo (Todos)</option>
               <option value="Informática">Informática</option>
               <option value="Industrial">Industrial</option>
@@ -211,22 +219,23 @@
         </div>
       </div>
 
-      <div class="glass-panel rounded-2xl overflow-hidden border border-slate-800">
+      <div class="glass-panel rounded-2xl overflow-hidden border border-neutral-800">
         <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead class="bg-slate-900/90 text-slate-400 text-[11px] uppercase tracking-wider font-semibold border-b border-slate-800">
-              <tr>
-                <th class="p-3">ID</th>
-                <th class="p-3">Artículo / Componente</th>
-                <th class="p-3 hidden sm:table-cell">Bodega / Ubicación</th>
-                <th class="p-3 text-center hidden md:table-cell">Total</th>
-                <th class="p-3 text-center">Disponible</th>
-                <th class="p-3 text-center hidden sm:table-cell">En Uso</th>
-                <th class="p-3 text-center hidden md:table-cell">Dañado</th>
-                <th class="p-3 text-right">Acción</th>
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-neutral-900/90 text-neutral-400 border-b border-neutral-800 uppercase tracking-wider">
+                <th class="p-3 font-semibold">ID</th>
+                <th class="p-3 font-semibold">Artículo</th>
+                <th class="p-3 font-semibold">Ubicación</th>
+                <th class="p-3 font-semibold text-center">Stock Total</th>
+                <th class="p-3 font-semibold text-center">En Uso</th>
+                <th class="p-3 font-semibold text-center">Mal Estado</th>
+                <th class="p-3 font-semibold text-center">Disponible</th>
+                <th class="p-3 font-semibold">Centro Costo</th>
+                <th class="p-3 font-semibold text-right">Acción</th>
               </tr>
             </thead>
-            <tbody id="inventory-table-body" class="divide-y divide-slate-800/60 text-xs sm:text-sm">
+            <tbody id="inventory-tbody" class="divide-y divide-neutral-800/60">
               <!-- JS -->
             </tbody>
           </table>
@@ -234,127 +243,135 @@
       </div>
     </section>
 
-    <!-- PANEL 3: REQUISITION FORM & LOAN LOG -->
+    <!-- PANEL 3: REQUISITION FORM & HISTORY -->
     <section id="panel-request" class="tab-panel hidden space-y-6">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Form -->
-        <div class="lg:col-span-7 glass-panel p-6 rounded-3xl border border-slate-800 space-y-5">
-          <div class="border-b border-slate-800 pb-3">
-            <h2 class="text-base font-bold text-slate-100 flex items-center gap-2">
-              <span class="text-cyan-400">📝</span> Ficha Digital de Solicitud de Materiales
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Form & Cart -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="glass-panel p-6 rounded-3xl border border-neutral-800 space-y-4">
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-red-600 inline-block"></span>
+              Ficha de Solicitud de Materiales
             </h2>
-            <p class="text-xs text-slate-400">Al procesar, FastAPI descontará automáticamente el stock disponible en SQLite.</p>
+
+            <form id="requisition-form" onsubmit="submitRequisition(event)" class="space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[11px] font-semibold text-neutral-300 mb-1">Nombre Completo Solicitante *</label>
+                  <input type="text" id="req-applicant" required placeholder="Ej: Juan Pérez" class="w-full p-2.5 rounded-xl text-xs glass-input">
+                </div>
+
+                <div>
+                  <label class="block text-[11px] font-semibold text-neutral-300 mb-1">RUT Solicitante *</label>
+                  <input type="text" id="req-rut" required placeholder="Ej: 12.345.678-9" class="w-full p-2.5 rounded-xl text-xs glass-input">
+                </div>
+
+                <div>
+                  <label class="block text-[11px] font-semibold text-neutral-300 mb-1">Carrera *</label>
+                  <select id="req-career" required class="w-full p-2.5 rounded-xl text-xs glass-input">
+                    <option value="Ingeniería Civil Informática">Ingeniería Civil Informática</option>
+                    <option value="Ingeniería Civil Industrial">Ingeniería Civil Industrial</option>
+                    <option value="Docente / Laboratorio">Docente / Encargado</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-[11px] font-semibold text-neutral-300 mb-1">Asignatura / Proyecto *</label>
+                  <input type="text" id="req-course" required placeholder="Ej: Taller de Robótica" class="w-full p-2.5 rounded-xl text-xs glass-input">
+                </div>
+
+                <div>
+                  <label class="block text-[11px] font-semibold text-neutral-300 mb-1">Profesor a Cargo *</label>
+                  <input type="text" id="req-professor" required placeholder="Ej: Prof. Roberto Silva" class="w-full p-2.5 rounded-xl text-xs glass-input">
+                </div>
+
+                <div>
+                  <label class="block text-[11px] font-semibold text-neutral-300 mb-1">Fecha de Devolución Estimada *</label>
+                  <input type="date" id="req-returndate" required class="w-full p-2.5 rounded-xl text-xs glass-input">
+                </div>
+              </div>
+
+              <!-- Item Selector -->
+              <div class="pt-3 border-t border-neutral-800">
+                <label class="block text-[11px] font-semibold text-red-400 mb-2">Agregar Materiales a la Ficha</label>
+                <div class="flex flex-col sm:flex-row gap-2">
+                  <select id="req-item-select" class="flex-1 p-2.5 rounded-xl text-xs glass-input">
+                    <!-- JS -->
+                  </select>
+                  <div class="flex gap-2">
+                    <input type="number" id="req-item-qty" min="1" value="1" class="w-20 p-2.5 rounded-xl text-xs glass-input text-center font-bold">
+                    <button type="button" onclick="addToCart()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-white font-bold text-xs rounded-xl border border-neutral-700">
+                      + Agregar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cart List -->
+              <div class="bg-neutral-950 p-3 rounded-2xl border border-neutral-800 min-h-[100px]">
+                <span class="text-[11px] text-neutral-400 font-semibold block mb-2">Materiales en esta solicitud:</span>
+                <div id="cart-list" class="space-y-2">
+                  <p class="text-xs text-neutral-500 italic">No ha agregado materiales aún.</p>
+                </div>
+              </div>
+
+              <button type="submit" class="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-red-600/30 transition-all">
+                ✅ Finalizar y Emitir Solicitud (Descontar Stock)
+              </button>
+            </form>
           </div>
-
-          <form id="requisition-form" onsubmit="submitRequisition(event)" class="space-y-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Nombre Solicitante *</label>
-                <input id="req-applicant" type="text" placeholder="Ej: Juan Pérez" required class="w-full glass-input px-3 py-2 rounded-xl text-xs">
-              </div>
-
-              <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">RUT / ID *</label>
-                <input id="req-rut" type="text" placeholder="Ej: 20.123.456-7" required class="w-full glass-input px-3 py-2 rounded-xl text-xs">
-              </div>
-
-              <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Carrera / Unidad</label>
-                <select id="req-career" class="w-full glass-input px-3 py-2 rounded-xl text-xs">
-                  <option value="Informática">Ingeniería en Informática</option>
-                  <option value="Industrial">Ingeniería Industrial</option>
-                  <option value="Mecatrónica">Mecatrónica / Electrónica</option>
-                  <option value="Investigación">Docencia / Investigación</option>
-                </select>
-              </div>
-
-              <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Asignatura / Proyecto *</label>
-                <input id="req-course" type="text" placeholder="Ej: Taller de Robótica" required class="w-full glass-input px-3 py-2 rounded-xl text-xs">
-              </div>
-
-              <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Profesor Responsable</label>
-                <input id="req-professor" type="text" placeholder="Ej: Ing. Carlos Mendoza" class="w-full glass-input px-3 py-2 rounded-xl text-xs">
-              </div>
-
-              <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Fecha Compromiso Devolución *</label>
-                <input id="req-returndate" type="date" required class="w-full glass-input px-3 py-2 rounded-xl text-xs text-slate-200">
-              </div>
-            </div>
-
-            <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 space-y-3">
-              <label class="block text-xs font-bold text-cyan-400">Agregar Materiales a la Solicitud:</label>
-              
-              <div class="flex flex-col sm:flex-row gap-2">
-                <select id="req-item-select" class="flex-1 glass-input px-3 py-2 rounded-xl text-xs">
-                  <!-- Populated by JS -->
-                </select>
-                <div class="flex items-center gap-2">
-                  <input id="req-item-qty" type="number" min="1" value="1" class="w-20 glass-input px-3 py-2 rounded-xl text-xs font-mono text-center">
-                  <button type="button" onclick="addToCart()" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs rounded-xl shadow-md">
-                    + Agregar
-                  </button>
-                </div>
-              </div>
-
-              <div id="cart-items-container" class="space-y-2 pt-2">
-                <div class="text-center py-4 text-slate-400 text-sm italic border border-dashed border-slate-800 rounded-xl">
-                  No has agregado artículos a la solicitud.
-                </div>
-              </div>
-            </div>
-
-            <button type="submit" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 text-white font-extrabold text-sm rounded-2xl shadow-lg shadow-emerald-500/25">
-              ✓ EMITIR FICHA Y DESCONTAR STOCK (FASTAPI)
-            </button>
-          </form>
         </div>
 
-        <!-- History -->
-        <div class="lg:col-span-5 space-y-4">
-          <div class="glass-panel p-5 rounded-3xl border border-slate-800">
-            <h3 class="font-bold text-sm text-slate-100 mb-3">📋 Registro de Fichas Emitidas</h3>
-            <div id="requisitions-history-list" class="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+        <!-- Loan History -->
+        <div class="space-y-4">
+          <div class="glass-panel p-5 rounded-3xl border border-neutral-800">
+            <h3 class="font-bold text-sm text-neutral-200 mb-3 flex items-center justify-between">
+              <span>📋 Registro de Solicitudes</span>
+              <span class="text-xs bg-red-600/20 text-red-400 px-2 py-0.5 rounded font-mono font-bold">Histórico</span>
+            </h3>
+
+            <div id="req-history-list" class="space-y-3 max-h-[600px] overflow-y-auto pr-1">
               <!-- JS -->
             </div>
           </div>
         </div>
+
       </div>
     </section>
 
-    <!-- PANEL 4: LOCATIONS MAP -->
+    <!-- PANEL 4: LOCATIONS -->
     <section id="panel-locations" class="tab-panel hidden space-y-4">
-      <div class="glass-panel p-4 rounded-2xl border border-slate-800">
-        <h2 class="text-base font-bold text-slate-100">📍 Mapa Visual de Ubicaciones en Bodega</h2>
-        <p class="text-xs text-slate-400">Artículos almacenados en cada estante y gabinete.</p>
-      </div>
+      <div class="glass-panel p-5 rounded-3xl border border-neutral-800">
+        <h2 class="text-base font-bold text-white mb-2">📍 Mapa de Bodegas y Estantes</h2>
+        <p class="text-xs text-neutral-400 mb-6">Visualización de ítems según su código físico de estantería.</p>
 
-      <div id="locations-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- JS -->
+        <div id="locations-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- JS -->
+        </div>
       </div>
     </section>
 
-    <!-- PANEL 5: SEMESTER STATS -->
+    <!-- PANEL 5: STATS -->
     <section id="panel-stats" class="tab-panel hidden space-y-6">
-      <div class="glass-panel p-5 rounded-3xl border border-slate-800">
-        <h2 class="text-base font-bold text-slate-100 mb-1">📈 Reporte y Estadísticas del Semestre</h2>
-        
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-          <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-4">
-            <h3 class="text-sm font-bold text-cyan-400">🏆 Top 10 Materiales Más Solicitados</h3>
+      <div class="glass-panel p-6 rounded-3xl border border-neutral-800 space-y-6">
+        <div>
+          <h2 class="text-base font-bold text-white">📈 Reporte y Estadísticas del Semestre</h2>
+          <p class="text-xs text-neutral-400 mt-1">Inspección de insumos con mayor demanda para control de adquisiciones.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-neutral-950 p-5 rounded-2xl border border-neutral-800 space-y-4">
+            <h3 class="font-bold text-sm text-neutral-200">🔥 Top 10 Materiales Más Solicitados</h3>
             <div id="stats-top-list" class="space-y-3">
               <!-- JS -->
             </div>
           </div>
 
-          <div class="space-y-4">
-            <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-4">
-              <h3 class="text-sm font-bold text-slate-200">🏫 Distribución por Centro de Costo</h3>
-              <div id="stats-cost-breakdown" class="grid grid-cols-3 gap-3">
-                <!-- JS -->
-              </div>
+          <div class="bg-neutral-950 p-5 rounded-2xl border border-neutral-800 space-y-4">
+            <h3 class="font-bold text-sm text-neutral-200">🏢 Distribución por Centro de Costo</h3>
+            <div id="stats-cost-breakdown" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <!-- JS -->
             </div>
           </div>
         </div>
@@ -363,158 +380,297 @@
 
   </main>
 
-  <!-- Mobile Bottom Navigation -->
-  <div class="fixed bottom-0 left-0 right-0 z-50 bg-slate-950/95 border-t border-slate-800 px-2 py-2 md:hidden">
-    <div class="grid grid-cols-5 gap-1 max-w-md mx-auto text-center text-xs">
-      <button onclick="switchTab('dashboard')" class="py-1 text-slate-400 hover:text-cyan-400 flex flex-col items-center">
-        <span>📊</span><span class="text-[10px]">Inicio</span>
-      </button>
-      <button onclick="switchTab('inventory')" class="py-1 text-slate-400 hover:text-cyan-400 flex flex-col items-center">
-        <span>📦</span><span class="text-[10px]">Inventario</span>
-      </button>
-      <button onclick="switchTab('request')" class="py-1 text-slate-400 hover:text-cyan-400 flex flex-col items-center">
-        <span>📝</span><span class="text-[10px]">Solicitud</span>
-      </button>
-      <button onclick="switchTab('locations')" class="py-1 text-slate-400 hover:text-cyan-400 flex flex-col items-center">
-        <span>📍</span><span class="text-[10px]">Bodegas</span>
-      </button>
-      <button onclick="switchTab('stats')" class="py-1 text-slate-400 hover:text-cyan-400 flex flex-col items-center">
-        <span>📈</span><span class="text-[10px]">Reporte</span>
-      </button>
+  <!-- Upload CSV Modal -->
+  <div id="upload-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="glass-panel max-w-md w-full p-6 rounded-3xl border border-neutral-700 space-y-4 relative">
+      <button onclick="closeUploadModal()" class="absolute top-4 right-4 text-neutral-400 hover:text-white font-bold text-lg">&times;</button>
+      <h3 class="text-base font-bold text-white flex items-center gap-2">
+        <span class="text-red-500">📂</span> Cargar Planilla CSV / Excel
+      </h3>
+      <p class="text-xs text-neutral-400">Selecciona tu archivo de inventario en formato CSV (con columnas ID, Nombre, Ubicación, Stock Total, En Uso, Mal Estado, Stock Disponible, Centro Costo).</p>
+      
+      <form id="upload-form" onsubmit="submitCsvUpload(event)" class="space-y-4">
+        <input type="file" id="csv-file-input" accept=".csv,.txt" required class="w-full text-xs text-neutral-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-red-600 file:text-white hover:file:bg-red-700 cursor-pointer">
+        <button type="submit" class="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-red-600/30">
+          🚀 Subir y Actualizar Inventario Live
+        </button>
+      </form>
     </div>
   </div>
 
-  <!-- Voucher Modal -->
-  <div id="voucher-modal" class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 hidden">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
-      <div id="voucher-modal-content"></div>
+  <!-- Printable Voucher Modal -->
+  <div id="voucher-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="glass-panel max-w-2xl w-full p-6 rounded-3xl border border-neutral-700 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div id="printable-voucher" class="bg-white text-black p-6 rounded-2xl border border-neutral-300 space-y-4">
+        <div class="flex justify-between items-start border-b border-black/20 pb-4">
+          <div>
+            <h2 class="text-xl font-extrabold text-black">FICHA DE SOLICITUD DE MATERIALES</h2>
+            <p class="text-xs text-neutral-600 font-bold">GESTIÓN DE LABORATORIO</p>
+          </div>
+          <div class="text-right">
+            <span id="v-code" class="text-base font-mono font-bold text-red-600 block">SOL-2026-001</span>
+            <span id="v-date" class="text-[11px] text-neutral-500 block">Fecha: --</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 text-xs border-b border-black/10 pb-3">
+          <div><strong>Solicitante:</strong> <span id="v-applicant">--</span></div>
+          <div><strong>RUT:</strong> <span id="v-rut">--</span></div>
+          <div><strong>Carrera:</strong> <span id="v-career">--</span></div>
+          <div><strong>Asignatura:</strong> <span id="v-course">--</span></div>
+          <div><strong>Profesor:</strong> <span id="v-professor">--</span></div>
+          <div><strong>Fecha Devolución:</strong> <span id="v-returndate">--</span></div>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold uppercase mb-2">Detalle de Materiales Entregados</h4>
+          <table class="w-full text-xs text-left border-collapse border border-black/20">
+            <thead>
+              <tr class="bg-neutral-100 border-b border-black/20">
+                <th class="p-2 border-r border-black/20">#</th>
+                <th class="p-2 border-r border-black/20">Descripción del Artículo</th>
+                <th class="p-2 text-center">Cant.</th>
+              </tr>
+            </thead>
+            <tbody id="v-items-tbody">
+              <!-- JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pt-12 grid grid-cols-2 gap-8 text-center text-xs">
+          <div class="border-t border-black pt-2 font-semibold">
+            Firma Solicitante<br><span class="text-[10px] font-normal text-neutral-500">(Recepcionó conforme)</span>
+          </div>
+          <div class="border-t border-black pt-2 font-semibold">
+            Firma Encargado Laboratorio<br><span class="text-[10px] font-normal text-neutral-500">(Autorizado y Entregado)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 no-print">
+        <button onclick="closeVoucher()" class="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white font-bold text-xs rounded-xl">Cerrar</button>
+        <button onclick="window.print()" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-red-600/30">
+          🖨️ Imprimir / Guardar PDF
+        </button>
+      </div>
     </div>
   </div>
 
-  <!-- Main Frontend JS Logic connected to FastAPI API -->
+  <!-- Smartphone Bottom Navigation Bar -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-neutral-950/95 backdrop-blur-lg border-t border-neutral-800 flex justify-around p-2">
+    <button onclick="switchTab('dashboard')" class="flex flex-col items-center p-1 text-red-500 font-semibold text-[10px]">
+      <span class="text-base">📊</span> Inicio
+    </button>
+    <button onclick="switchTab('inventory')" class="flex flex-col items-center p-1 text-neutral-400 font-semibold text-[10px]">
+      <span class="text-base">📦</span> Stock
+    </button>
+    <button onclick="switchTab('request')" class="flex flex-col items-center p-1 text-neutral-400 font-semibold text-[10px]">
+      <span class="text-base">📝</span> Solicitud
+    </button>
+    <button onclick="switchTab('locations')" class="flex flex-col items-center p-1 text-neutral-400 font-semibold text-[10px]">
+      <span class="text-base">📍</span> Bodegas
+    </button>
+    <button onclick="switchTab('stats')" class="flex flex-col items-center p-1 text-neutral-400 font-semibold text-[10px]">
+      <span class="text-base">📈</span> Reportes
+    </button>
+  </nav>
+
+  <!-- JavaScript Application Logic -->
   <script>
-    let inventoryData = [];
     let cart = [];
+    let inventoryData = [];
+
+    function openUploadModal() {
+      document.getElementById('upload-modal').classList.remove('hidden');
+    }
+    function closeUploadModal() {
+      document.getElementById('upload-modal').classList.add('hidden');
+    }
+
+    async function submitCsvUpload(e) {
+      e.preventDefault();
+      const input = document.getElementById('csv-file-input');
+      if (!input.files[0]) return;
+
+      const formData = new FormData();
+      formData.append('file', input.files[0]);
+
+      try {
+        const res = await fetch('/api/inventory/upload-csv', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert(`✅ Planilla cargada con éxito. ${data.imported || 0} nuevos artículos importados, ${data.updated || 0} actualizados.`);
+          closeUploadModal();
+          loadDashboard();
+          loadInventory();
+        } else {
+          alert('❌ Error: ' + (data.detail || 'No se pudo procesar el archivo.'));
+        }
+      } catch (err) {
+        alert('❌ Error de conexión al subir la planilla.');
+      }
+    }
 
     async function loadDashboard() {
       const res = await fetch('/api/dashboard');
       const data = await res.json();
 
-      document.getElementById('dash-total-items').textContent = data.total_items;
-      document.getElementById('dash-total-units').textContent = data.total_units;
-      document.getElementById('dash-total-avail').textContent = data.total_avail;
-      document.getElementById('dash-total-inuse').textContent = data.total_in_use;
-      document.getElementById('dash-total-damaged').textContent = data.total_damaged;
-      document.getElementById('dash-active-reqs').textContent = data.active_reqs;
+      document.getElementById('dash-total-items').innerText = data.total_items;
+      document.getElementById('dash-total-units').innerText = data.total_units;
+      document.getElementById('dash-total-avail').innerText = data.total_avail;
+      document.getElementById('dash-total-inuse').innerText = data.total_in_use;
+      document.getElementById('dash-total-damaged').innerText = data.total_damaged;
+      document.getElementById('dash-active-reqs').innerText = data.active_reqs;
 
-      // Low stock list
       const lowContainer = document.getElementById('dash-lowstock-list');
-      lowContainer.innerHTML = data.low_stock.map(i => `
-        <div class="flex items-center justify-between p-3 bg-slate-900/80 rounded-xl border border-rose-500/20 text-xs">
-          <div>
-            <span class="font-bold text-slate-200 block">${i.name}</span>
-            <span class="text-slate-400 font-mono">${i.location}</span>
+      if (data.low_stock.length === 0) {
+        lowContainer.innerHTML = `<p class="text-slate-400 text-xs italic">No hay ítems con stock crítico.</p>`;
+      } else {
+        lowContainer.innerHTML = data.low_stock.map(item => `
+          <div class="flex items-center justify-between p-3 bg-neutral-900/60 rounded-xl border border-neutral-800">
+            <div>
+              <p class="font-bold text-xs text-white">#${item.id} - ${item.name}</p>
+              <p class="text-[11px] text-neutral-400">Bodega: ${item.location}</p>
+            </div>
+            <span class="px-2.5 py-1 text-xs font-mono font-bold bg-red-900/40 text-red-400 border border-red-800 rounded-lg">
+              Disp: ${item.avail} / ${item.stock}
+            </span>
           </div>
-          <span class="px-2 py-0.5 rounded-full text-xs font-bold ${i.avail === 0 ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'}">
-            ${i.avail === 0 ? 'Agotado (0)' : `Quedan ${i.avail}`}
-          </span>
-        </div>
-      `).join('');
+        `).join('');
+      }
 
-      // Recent reqs
       const recentContainer = document.getElementById('dash-recent-reqs');
-      recentContainer.innerHTML = data.recent_reqs.map(r => `
-        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
-          <div>
-            <span class="font-bold font-mono text-cyan-400">${r.code}</span> - ${r.applicant}
-            <p class="text-slate-400">${r.items.map(i => i.item_name).join(', ')}</p>
+      if (data.recent_reqs.length === 0) {
+        recentContainer.innerHTML = `<p class="text-neutral-400 text-xs italic">Aún no hay fichas registradas.</p>`;
+      } else {
+        recentContainer.innerHTML = data.recent_reqs.map(req => `
+          <div class="flex items-center justify-between p-3 bg-neutral-900/60 rounded-xl border border-neutral-800">
+            <div>
+              <p class="font-bold text-xs font-mono text-red-400">${req.code} - ${req.applicant}</p>
+              <p class="text-[11px] text-neutral-400">${req.course} (${req.career})</p>
+            </div>
+            <span class="px-2.5 py-1 text-[11px] font-bold rounded-lg ${req.status === 'ACTIVO' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-emerald-500/20 text-emerald-300'}">
+              ${req.status}
+            </span>
           </div>
-          <span class="px-2 py-0.5 rounded-full font-bold ${r.status === 'ACTIVO' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'}">${r.status}</span>
-        </div>
-      `).join('');
+        `).join('');
+      }
     }
 
     async function loadInventory() {
       const search = document.getElementById('search-input').value;
-      const cat = document.getElementById('filter-category').value;
-      const loc = document.getElementById('filter-location').value;
-      const cost = document.getElementById('filter-cost').value;
+      const category = document.getElementById('filter-category').value;
+      const location = document.getElementById('filter-location').value;
+      const costCenter = document.getElementById('filter-cost-center').value;
 
-      const query = new URLSearchParams({ search, category: cat, location: loc, cost_center: cost });
-      const res = await fetch(`/api/inventory?${query}`);
+      const url = `/api/inventory?search=${encodeURIComponent(search)}&category=${encodeURIComponent(category)}&location=${encodeURIComponent(location)}&cost_center=${encodeURIComponent(costCenter)}`;
+      const res = await fetch(url);
       inventoryData = await res.json();
 
-      populateSelects(inventoryData);
+      populateSelectFilters(inventoryData);
 
-      const tbody = document.getElementById('inventory-table-body');
-      tbody.innerHTML = inventoryData.map(i => `
-        <tr class="hover:bg-slate-800/40 border-b border-slate-800/60">
-          <td class="p-3 font-mono text-slate-400">#${i.id}</td>
-          <td class="p-3 font-medium text-slate-100">${i.name}</td>
-          <td class="p-3 hidden sm:table-cell font-mono text-cyan-400">${i.location}</td>
-          <td class="p-3 text-center hidden md:table-cell font-semibold">${i.stock}</td>
-          <td class="p-3 text-center">
-            <span class="px-2.5 py-1 rounded-lg font-bold ${i.avail > 0 ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/15 text-rose-400 border border-rose-500/30'}">${i.avail}</span>
-          </td>
-          <td class="p-3 text-center hidden sm:table-cell">${i.in_use}</td>
-          <td class="p-3 text-center hidden md:table-cell">${i.damaged}</td>
-          <td class="p-3 text-right">
-            <button onclick="quickAdd(${i.id})" class="px-3 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 rounded-lg text-xs font-semibold border border-cyan-500/30">+ Solicitar</button>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function populateSelects(items) {
-      const catSelect = document.getElementById('filter-category');
-      if (catSelect.children.length <= 1) {
-        const categories = [...new Set(items.map(i => i.category))].sort();
-        categories.forEach(c => {
-          catSelect.appendChild(new Option(c, c));
-        });
-      }
-
-      const reqSelect = document.getElementById('req-item-select');
-      const avail = items.filter(i => i.avail > 0);
-      reqSelect.innerHTML = `<option value="">-- Seleccionar Material (${avail.length} disponibles) --</option>` +
-        avail.map(i => `<option value="${i.id}">#${i.id} - ${i.name} (Disp: ${i.avail} | ${i.location})</option>`).join('');
-    }
-
-    function addToCart() {
-      const itemId = parseInt(document.getElementById('req-item-select').value);
-      const qty = parseInt(document.getElementById('req-item-qty').value) || 1;
-      if (!itemId) return;
-
-      const item = inventoryData.find(i => i.id === itemId);
-      if (!item || qty > item.avail) {
-        alert('Stock no disponible.');
+      const tbody = document.getElementById('inventory-tbody');
+      if (inventoryData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center text-neutral-400 italic">No se encontraron artículos con esos filtros.</td></tr>`;
         return;
       }
 
-      const existing = cart.find(c => c.item_id === itemId);
-      if (existing) {
-        existing.quantity += qty;
-      } else {
-        cart.push({ item_id: itemId, name: item.name, quantity: qty, location: item.location });
+      tbody.innerHTML = inventoryData.map(item => `
+        <tr class="hover:bg-neutral-900/40 transition-colors">
+          <td class="p-3 font-mono font-bold text-neutral-400">#${item.id}</td>
+          <td class="p-3 font-semibold text-white">${item.name}</td>
+          <td class="p-3 font-mono text-xs text-neutral-300">${item.location}</td>
+          <td class="p-3 text-center font-mono font-bold">${item.stock}</td>
+          <td class="p-3 text-center font-mono text-amber-400 font-bold">${item.in_use}</td>
+          <td class="p-3 text-center font-mono text-red-400 font-bold">${item.damaged}</td>
+          <td class="p-3 text-center font-mono text-emerald-400 font-bold">${item.avail}</td>
+          <td class="p-3"><span class="px-2 py-0.5 text-[10px] rounded font-medium bg-neutral-800 text-neutral-300">${item.cost_center}</span></td>
+          <td class="p-3 text-right">
+            <button onclick="quickAdd(${item.id})" class="px-2.5 py-1 bg-red-600/20 hover:bg-red-600/40 text-red-400 rounded font-semibold text-[11px] border border-red-500/30">
+              + Solicitar
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      const reqSelect = document.getElementById('req-item-select');
+      reqSelect.innerHTML = `<option value="">-- Seleccionar material del inventario --</option>` +
+        inventoryData.map(i => `<option value="${i.id}">${i.name} (Disp: ${i.avail})</option>`).join('');
+    }
+
+    function populateSelectFilters(data) {
+      const catSelect = document.getElementById('filter-category');
+      const locSelect = document.getElementById('filter-location');
+
+      if (catSelect.options.length <= 1) {
+        const categories = [...new Set(data.map(i => i.category))].sort();
+        categories.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c; opt.innerText = c;
+          catSelect.appendChild(opt);
+        });
       }
+
+      if (locSelect.options.length <= 1) {
+        const locations = [...new Set(data.map(i => i.location.split('-')[0]))].sort();
+        locations.forEach(l => {
+          const opt = document.createElement('option');
+          opt.value = l; opt.innerText = l;
+          locSelect.appendChild(opt);
+        });
+      }
+    }
+
+    function addToCart() {
+      const select = document.getElementById('req-item-select');
+      const qtyInput = document.getElementById('req-item-qty');
+
+      const itemId = parseInt(select.value);
+      const qty = parseInt(qtyInput.value) || 1;
+
+      if (!itemId) { alert('Seleccione un material.'); return; }
+      const item = inventoryData.find(i => i.id === itemId);
+      if (!item) return;
+
+      if (qty > item.avail) {
+        alert(`Stock insuficiente para ${item.name}. Disponible actual: ${item.avail}`);
+        return;
+      }
+
+      const existingIndex = cart.findIndex(c => c.item_id === itemId);
+      if (existingIndex >= 0) {
+        cart[existingIndex].quantity += qty;
+      } else {
+        cart.push({ item_id: item.id, name: item.name, quantity: qty });
+      }
+
+      renderCart();
+      select.value = '';
+      qtyInput.value = 1;
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
       renderCart();
     }
 
     function renderCart() {
-      const container = document.getElementById('cart-items-container');
+      const container = document.getElementById('cart-list');
       if (cart.length === 0) {
-        container.innerHTML = `<div class="text-center py-4 text-slate-400 text-sm italic border border-dashed border-slate-800 rounded-xl">No has agregado artículos.</div>`;
+        container.innerHTML = `<p class="text-xs text-neutral-500 italic">No ha agregado materiales aún.</p>`;
         return;
       }
+
       container.innerHTML = cart.map((c, idx) => `
-        <div class="flex items-center justify-between p-3 bg-slate-800/60 rounded-xl text-xs">
-          <div>
-            <span class="font-bold text-slate-100">${c.name}</span>
-            <span class="text-cyan-400 font-mono block">${c.location}</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="px-2.5 py-1 bg-cyan-500/20 text-cyan-300 font-bold rounded-lg">x${c.quantity}</span>
-            <button onclick="cart.splice(${idx}, 1); renderCart();" class="text-rose-400 font-bold px-2">✕</button>
+        <div class="flex items-center justify-between p-2 bg-neutral-900 rounded-xl border border-neutral-800 text-xs">
+          <span class="font-medium text-white">${c.name}</span>
+          <div class="flex items-center gap-3">
+            <span class="font-mono text-red-400 font-bold">x${c.quantity}</span>
+            <button type="button" onclick="removeFromCart(${idx})" class="text-red-400 hover:text-red-300 font-bold">&times;</button>
           </div>
         </div>
       `).join('');
@@ -523,7 +679,7 @@
     async function submitRequisition(e) {
       e.preventDefault();
       if (cart.length === 0) {
-        alert('Agrega materiales.');
+        alert('Debe agregar al menos un material a la lista.');
         return;
       }
 
@@ -543,113 +699,119 @@
         body: JSON.stringify(payload)
       });
 
-      if (!res.ok) {
-        const err = await res.json();
-        alert('Error: ' + err.detail);
-        return;
+      const data = await res.json();
+      if (res.ok) {
+        openVoucher(data);
+        cart = [];
+        renderCart();
+        document.getElementById('requisition-form').reset();
+        loadDashboard();
+        loadInventory();
+        loadRequisitionsHistory();
+      } else {
+        alert('❌ Error: ' + (data.detail || 'No se pudo crear la solicitud.'));
       }
-
-      const created = await res.json();
-      cart = [];
-      document.getElementById('requisition-form').reset();
-      renderCart();
-      showVoucher(created);
-      loadRequisitionsHistory();
-      loadDashboard();
-      loadInventory();
     }
 
     async function loadRequisitionsHistory() {
       const res = await fetch('/api/requisitions');
       const reqs = await res.json();
 
-      const container = document.getElementById('requisitions-history-list');
+      const container = document.getElementById('req-history-list');
+      if (reqs.length === 0) {
+        container.innerHTML = `<p class="text-neutral-400 text-xs italic">Sin solicitudes registradas.</p>`;
+        return;
+      }
+
       container.innerHTML = reqs.map(r => `
-        <div class="p-4 bg-slate-900/80 rounded-2xl border ${r.status === 'ACTIVO' ? 'border-amber-500/30' : 'border-slate-800'} text-xs space-y-2">
-          <div class="flex justify-between items-center">
-            <span class="font-mono font-bold text-cyan-400">${r.code}</span>
-            <span class="px-2 py-0.5 rounded-full font-bold ${r.status === 'ACTIVO' ? 'bg-amber-500/20 text-amber-300' : 'bg-emerald-500/20 text-emerald-300'}">${r.status}</span>
+        <div class="p-3 bg-neutral-900/80 rounded-2xl border border-neutral-800 space-y-2">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="font-mono font-bold text-xs text-red-400">${r.code}</span>
+              <p class="font-bold text-xs text-white mt-0.5">${r.applicant}</p>
+              <p class="text-[11px] text-neutral-400">${r.course} • Devolución: ${r.return_date}</p>
+            </div>
+            <span class="px-2 py-0.5 text-[10px] font-bold rounded ${r.status === 'ACTIVO' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-emerald-500/20 text-emerald-300'}">
+              ${r.status}
+            </span>
           </div>
-          <div><strong>Solicitante:</strong> ${r.applicant} (${r.career})</div>
-          <div><strong>Asignatura:</strong> ${r.course} | <strong>Retorno:</strong> ${r.return_date}</div>
-          <div class="bg-slate-950/60 p-2 rounded-xl">
-            ${r.items.map(i => `<div>• ${i.item_name} <span class="font-mono text-cyan-400 font-bold">x${i.quantity}</span></div>`).join('')}
+
+          <div class="text-[11px] bg-neutral-950 p-2 rounded-xl text-neutral-300">
+            ${r.items.map(i => `<div>• ${i.item_name} (x${i.quantity})</div>`).join('')}
           </div>
-          <div class="flex justify-end gap-2 pt-1">
-            <button onclick='showVoucher(${JSON.stringify(r)})' class="px-3 py-1 bg-slate-800 text-cyan-300 rounded-lg">👁️ Ver Ficha</button>
-            ${r.status === 'ACTIVO' ? `<button onclick="returnReq(${r.id})" class="px-3 py-1 bg-emerald-600/20 text-emerald-300 rounded-lg border border-emerald-500/30">↩️ Devolver</button>` : ''}
+
+          <div class="flex justify-between items-center pt-1">
+            <button onclick='openVoucher(${JSON.stringify(r)})' class="text-[11px] text-neutral-300 hover:text-white font-semibold">
+              🖨️ Ver Ficha
+            </button>
+
+            ${r.status === 'ACTIVO' ? `
+              <button onclick="returnLoan(${r.id})" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] rounded-lg">
+                ↩️ Devolver Materiales
+              </button>
+            ` : ''}
           </div>
         </div>
       `).join('');
     }
 
-    async function returnReq(reqId) {
-      if (!confirm('¿Confirmar devolución de materiales?')) return;
+    async function returnLoan(reqId) {
+      if (!confirm('¿Confirmar la devolución de materiales de esta ficha? El stock volverá a estar disponible.')) return;
+
       const res = await fetch(`/api/requisitions/${reqId}/return`, { method: 'POST' });
       if (res.ok) {
-        alert('Materiales devueltos al stock.');
-        loadRequisitionsHistory();
+        alert('✅ Materiales devueltos y stock reincorporado.');
         loadDashboard();
         loadInventory();
+        loadRequisitionsHistory();
+      } else {
+        alert('❌ Error al procesar la devolución.');
       }
     }
 
-    function showVoucher(r) {
-      const modal = document.getElementById('voucher-modal');
-      const content = document.getElementById('voucher-modal-content');
+    function openVoucher(data) {
+      document.getElementById('v-code').innerText = data.code;
+      document.getElementById('v-date').innerText = 'Fecha: ' + (data.created_at ? data.created_at.split('T')[0] : new Date().toISOString().split('T')[0]);
+      document.getElementById('v-applicant').innerText = data.applicant;
+      document.getElementById('v-rut').innerText = data.rut;
+      document.getElementById('v-career').innerText = data.career;
+      document.getElementById('v-course').innerText = data.course;
+      document.getElementById('v-professor').innerText = data.professor;
+      document.getElementById('v-returndate').innerText = data.return_date;
 
-      content.innerHTML = `
-        <div id="printable-voucher" class="p-6 bg-slate-900 text-slate-100 rounded-2xl border border-cyan-500/40">
-          <div class="flex justify-between border-b border-slate-800 pb-3">
-            <div>
-              <h3 class="text-xl font-bold text-cyan-400">FICHA DE SOLICITUD DE MATERIALES</h3>
-              <p class="text-xs text-slate-400">Laboratorio de Ingeniería y Robótica</p>
-            </div>
-            <div class="text-right font-mono font-bold text-emerald-400">${r.code}</div>
-          </div>
-          <div class="grid grid-cols-2 gap-3 my-4 text-xs">
-            <div><strong>Solicitante:</strong> ${r.applicant}</div>
-            <div><strong>RUT:</strong> ${r.rut}</div>
-            <div><strong>Carrera:</strong> ${r.career}</div>
-            <div><strong>Asignatura:</strong> ${r.course}</div>
-            <div><strong>Profesor:</strong> ${r.professor || 'N/A'}</div>
-            <div><strong>Devolución Prometida:</strong> ${r.return_date}</div>
-          </div>
-          <h4 class="font-bold text-xs text-cyan-300 mt-4 mb-2">Materiales Entregados:</h4>
-          <table class="w-full text-xs text-left mb-6">
-            <thead class="bg-slate-800"><tr><th class="p-2">Material</th><th class="p-2 text-right">Cantidad</th></tr></thead>
-            <tbody>${r.items.map(i => `<tr><td class="p-2">${i.item_name}</td><td class="p-2 text-right font-bold text-emerald-400">x${i.quantity}</td></tr>`).join('')}</tbody>
-          </table>
-          <div class="grid grid-cols-2 gap-8 text-center text-xs mt-8 pt-4 border-t border-slate-800">
-            <div><div class="border-b border-slate-600 mb-1 h-8"></div><p>Firma Encargado Laboratorio</p></div>
-            <div><div class="border-b border-slate-600 mb-1 h-8"></div><p>Firma Solicitante</p></div>
-          </div>
-        </div>
-        <div class="flex justify-end gap-3 mt-4 no-print">
-          <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-cyan-400 rounded-xl text-xs font-semibold">🖨️ Imprimir / PDF</button>
-          <button onclick="document.getElementById('voucher-modal').classList.add('hidden')" class="px-4 py-2 bg-cyan-600 text-white rounded-xl text-xs font-semibold">Cerrar</button>
-        </div>
-      `;
-      modal.classList.remove('hidden');
+      const tbody = document.getElementById('v-items-tbody');
+      tbody.innerHTML = data.items.map((item, idx) => `
+        <tr class="border-b border-black/10">
+          <td class="p-2 border-r border-black/20 text-center font-bold">${idx + 1}</td>
+          <td class="p-2 border-r border-black/20">${item.item_name}</td>
+          <td class="p-2 text-center font-mono font-bold">${item.quantity}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('voucher-modal').classList.remove('hidden');
+    }
+
+    function closeVoucher() {
+      document.getElementById('voucher-modal').classList.add('hidden');
     }
 
     async function loadLocations() {
       const res = await fetch('/api/inventory');
       const items = await res.json();
 
-      const locationsMap = {};
+      const grouped = {};
       items.forEach(i => {
-        const loc = i.location.split(',')[0].trim();
-        if (!locationsMap[loc]) locationsMap[loc] = [];
-        locationsMap[loc].push(i);
+        const prefix = i.location.split('-')[0];
+        if (!grouped[prefix]) grouped[prefix] = [];
+        grouped[prefix].push(i);
       });
 
       const grid = document.getElementById('locations-grid');
-      grid.innerHTML = Object.entries(locationsMap).map(([loc, list]) => `
-        <div class="glass-panel p-4 rounded-2xl border border-slate-800">
-          <span class="text-xs font-mono px-2 py-1 bg-cyan-500/20 text-cyan-300 rounded font-bold">📍 ${loc}</span>
+      grid.innerHTML = Object.entries(grouped).map(([loc, list]) => `
+        <div class="glass-panel p-4 rounded-2xl border border-neutral-800">
+          <span class="text-xs font-mono px-2 py-1 bg-red-600/20 text-red-400 border border-red-500/30 rounded font-bold">📍 ${loc}</span>
           <div class="space-y-1.5 mt-3 max-h-48 overflow-y-auto pr-1 text-xs">
-            ${list.map(i => `<div class="flex justify-between py-1 border-b border-slate-800/40"><span class="truncate pr-2">${i.name}</span><span class="font-mono text-cyan-400 font-bold">${i.avail}/${i.stock}</span></div>`).join('')}
+            ${list.map(i => `<div class="flex justify-between py-1 border-b border-neutral-800/40"><span class="truncate pr-2">${i.name}</span><span class="font-mono text-red-400 font-bold">${i.avail}/${i.stock}</span></div>`).join('')}
           </div>
         </div>
       `).join('');
@@ -661,14 +823,14 @@
 
       const topList = document.getElementById('stats-top-list');
       if (data.top_items.length === 0) {
-        topList.innerHTML = `<p class="text-slate-400 text-xs italic">Aún no hay solicitudes registradas.</p>`;
+        topList.innerHTML = `<p class="text-neutral-400 text-xs italic">Aún no hay solicitudes registradas.</p>`;
       } else {
         const max = data.top_items[0].count || 1;
         topList.innerHTML = data.top_items.map((item, idx) => `
           <div class="space-y-1 text-xs">
-            <div class="flex justify-between font-medium"><span>#${idx+1} ${item.name}</span><span class="text-cyan-400 font-mono font-bold">${item.count} un.</span></div>
-            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
-              <div class="h-full bg-cyan-500 rounded-full" style="width: ${Math.round((item.count/max)*100)}%"></div>
+            <div class="flex justify-between font-medium"><span>#${idx+1} ${item.name}</span><span class="text-red-400 font-mono font-bold">${item.count} un.</span></div>
+            <div class="w-full h-2 bg-neutral-900 rounded-full overflow-hidden">
+              <div class="h-full bg-red-600 rounded-full" style="width: ${Math.round((item.count/max)*100)}%"></div>
             </div>
           </div>
         `).join('');
@@ -676,9 +838,9 @@
 
       const costBreakdown = document.getElementById('stats-cost-breakdown');
       costBreakdown.innerHTML = Object.entries(data.cost_breakdown).map(([k, v]) => `
-        <div class="p-3 bg-slate-900/60 rounded-xl text-center">
-          <p class="text-xs text-slate-400">${k}</p>
-          <p class="text-xl font-bold font-mono text-cyan-400 mt-1">${v}</p>
+        <div class="p-3 bg-neutral-900/60 rounded-xl text-center border border-neutral-800">
+          <p class="text-xs text-neutral-400">${k}</p>
+          <p class="text-xl font-bold font-mono text-red-400 mt-1">${v}</p>
         </div>
       `).join('');
     }
