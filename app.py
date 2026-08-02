@@ -101,6 +101,27 @@ def export_csv(db: Session = Depends(get_db)):
         headers={"Content-Disposition": "attachment; filename=inventario_laboratorio_actualizado.csv"}
     )
 
+@app.get("/api/shopping-list")
+def get_shopping_list(db: Session = Depends(get_db)):
+    return crud.get_shopping_list(db)
+
+@app.get("/api/export/shopping-list-csv")
+def export_shopping_list_csv(db: Session = Depends(get_db)):
+    shopping_items = crud.get_shopping_list(db)
+    output = io.StringIO()
+    writer = csv.writer(output, delimiter=';')
+    
+    writer.writerow(["ID", "Nombre Artículo", "Ubicación", "Stock Disp.", "Dañados", "Cantidad Sugerida a Comprar", "Motivo Reposición", "Centro de Costo"])
+    for s in shopping_items:
+        writer.writerow([s["id"], s["name"], s["location"], s["avail"], s["damaged"], s["suggested_qty"], s["reason"], s["cost_center"]])
+    
+    output.seek(0)
+    return StreamingResponse(
+        io.BytesIO(output.getvalue().encode("utf-8-sig")),
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": "attachment; filename=listado_de_compras_laboratorio.csv"}
+    )
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)

@@ -218,6 +218,6 @@ def seed_database(db: Session):
             )
             db.add(item_obj)
         db.commit()
-        print(f"[SEED] OK: {len(INITIAL_ITEMS)} articulos precargados en SQLite.")
+        print(f"[SEED] OK: {len(INITIAL_ITEMS)} articulos precargados en la base de datos.")
     else:
         print(f"[SEED] Inventario ya contiene {existing_count} artículos. Se omitió la precarga.")

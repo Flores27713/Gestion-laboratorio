@@ -264,3 +264,36 @@ def import_file_data(db: Session, file_bytes: bytes, filename: str):
 
     db.commit()
     return {"status": "success", "imported": imported_count, "updated": updated_count}
+
+def get_shopping_list(db: Session):
+    items = db.query(models.Item).all()
+    shopping_items = []
+    
+    for item in items:
+        # Reorder criteria: low stock (avail <= 2) OR damaged items needing replacement
+        suggested_qty = 0
+        reason = []
+        
+        if item.avail <= 2:
+            suggested_qty += (5 - item.avail)
+            reason.append("Stock Crítico / Bajo")
+        if item.damaged > 0:
+            suggested_qty += item.damaged
+            reason.append(f"Reemplazo {item.damaged} dañados")
+
+        if suggested_qty > 0:
+            shopping_items.append({
+                "id": item.id,
+                "name": item.name,
+                "location": item.location,
+                "stock": item.stock,
+                "avail": item.avail,
+                "damaged": item.damaged,
+                "cost_center": item.cost_center,
+                "category": item.category,
+                "suggested_qty": suggested_qty,
+                "reason": " + ".join(reason)
+            })
+            
+    shopping_items.sort(key=lambda x: (x["avail"], -x["suggested_qty"]))
+    return shopping_items
