@@ -143,35 +143,77 @@ def get_semester_stats(db: Session):
         "cost_breakdown": cost_breakdown
     }
 
-def import_csv_data(db: Session, csv_text: str):
+def import_file_data(db: Session, file_bytes: bytes, filename: str):
     import csv
     import io
 
-    # Detect delimiter
-    delimiter = ';' if ';' in csv_text else ','
-    f = io.StringIO(csv_text.strip())
-    reader = csv.reader(f, delimiter=delimiter)
+    rows = []
+    filename_lower = filename.lower()
 
-    headers = next(reader, None)
-    if not headers:
-        raise HTTPException(status_code=400, detail="Archivo CSV vacío o inválido.")
+    if filename_lower.endswith(('.xlsx', '.xls')):
+        try:
+            import openpyxl
+            wb = openpyxl.load_workbook(filename=io.BytesIO(file_bytes), data_only=True)
+            sheet = wb.active
+            for row in sheet.iter_rows(values_only=True):
+                if any(row):
+                    rows.append([str(c) if c is not None else "" for c in row])
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"No se pudo leer el archivo Excel: {str(e)}")
+    else:
+        try:
+            try:
+                text = file_bytes.decode('utf-8-sig')
+            except Exception:
+                text = file_bytes.decode('latin-1')
+
+            delimiter = ';' if ';' in text else (',' if ',' in text else '\t')
+            f = io.StringIO(text.strip())
+            reader = csv.reader(f, delimiter=delimiter)
+            for row in reader:
+                if any(row):
+                    rows.append(row)
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"No se pudo leer el archivo CSV: {str(e)}")
+
+    if not rows:
+        raise HTTPException(status_code=400, detail="El archivo está vacío.")
+
+    # Check headers
+    headers = [str(h).strip().lower() for h in rows[0]]
+    start_index = 1 if any("nombre" in h or "id" in h or "articulo" in h for h in headers) else 0
 
     imported_count = 0
     updated_count = 0
 
-    for row in reader:
-        if not row or len(row) < 3:
+    for row in rows[start_index:]:
+        if not row or len(row) < 2:
             continue
         try:
-            # Format: ID, Nombre, Ubicación, Stock Total, En Uso, Mal Estado, Stock Disponible, Centro Costo
-            item_id = int(row[0].strip()) if row[0].strip().isdigit() else None
-            name = row[1].strip()
-            location = row[2].strip() if len(row) > 2 else "BODEGA"
-            stock = int(row[3].strip()) if len(row) > 3 and row[3].strip().isdigit() else 1
-            in_use = int(row[4].strip()) if len(row) > 4 and row[4].strip().isdigit() else 0
-            damaged = int(row[5].strip()) if len(row) > 5 and row[5].strip().isdigit() else 0
-            avail = int(row[6].strip()) if len(row) > 6 and row[6].strip().isdigit() else max(0, stock - in_use - damaged)
-            cost_center = row[7].strip() if len(row) > 7 else "Ambas Carreras"
+            val_0 = str(row[0]).strip()
+            item_id = int(val_0) if val_0.isdigit() else None
+            
+            # If col 0 is numeric ID:
+            if item_id is not None:
+                name = str(row[1]).strip()
+                location = str(row[2]).strip() if len(row) > 2 else "BODEGA"
+                stock = int(float(str(row[3]).strip())) if len(row) > 3 and str(row[3]).strip().replace('.','',1).isdigit() else 1
+                in_use = int(float(str(row[4]).strip())) if len(row) > 4 and str(row[4]).strip().replace('.','',1).isdigit() else 0
+                damaged = int(float(str(row[5]).strip())) if len(row) > 5 and str(row[5]).strip().replace('.','',1).isdigit() else 0
+                avail = int(float(str(row[6]).strip())) if len(row) > 6 and str(row[6]).strip().replace('.','',1).isdigit() else max(0, stock - in_use - damaged)
+                cost_center = str(row[7]).strip() if len(row) > 7 else "Ambas Carreras"
+            else:
+                # If col 0 is Name:
+                name = val_0
+                location = str(row[1]).strip() if len(row) > 1 else "BODEGA"
+                stock = int(float(str(row[2]).strip())) if len(row) > 2 and str(row[2]).strip().replace('.','',1).isdigit() else 1
+                in_use = int(float(str(row[3]).strip())) if len(row) > 3 and str(row[3]).strip().replace('.','',1).isdigit() else 0
+                damaged = int(float(str(row[4]).strip())) if len(row) > 4 and str(row[4]).strip().replace('.','',1).isdigit() else 0
+                avail = int(float(str(row[5]).strip())) if len(row) > 5 and str(row[5]).strip().replace('.','',1).isdigit() else max(0, stock - in_use - damaged)
+                cost_center = str(row[6]).strip() if len(row) > 6 else "Ambas Carreras"
+
+            if not name:
+                continue
 
             # Auto category detection
             category = "EQUIPOS"

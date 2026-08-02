@@ -79,14 +79,10 @@ def get_stats(db: Session = Depends(get_db)):
 
 @app.post("/api/inventory/upload-csv")
 async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)):
-    if not file.filename.lower().endswith(('.csv', '.txt')):
-        raise HTTPException(status_code=400, detail="Por favor suba un archivo de tipo CSV (.csv)")
+    if not file.filename.lower().endswith(('.csv', '.xlsx', '.xls', '.txt')):
+        raise HTTPException(status_code=400, detail="Por favor suba un archivo válido de Excel (.xlsx, .xls) o CSV (.csv)")
     contents = await file.read()
-    try:
-        csv_text = contents.decode('utf-8-sig')
-    except Exception:
-        csv_text = contents.decode('latin-1')
-    return crud.import_csv_data(db, csv_text)
+    return crud.import_file_data(db, contents, file.filename)
 
 @app.get("/api/export/csv")
 def export_csv(db: Session = Depends(get_db)):
