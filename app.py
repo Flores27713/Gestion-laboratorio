@@ -84,6 +84,13 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
     contents = await file.read()
     return crud.import_file_data(db, contents, file.filename)
 
+@app.post("/api/inventory/preview-upload")
+async def preview_upload(file: UploadFile = File(...)):
+    if not file.filename.lower().endswith(('.csv', '.xlsx', '.xls', '.txt')):
+        raise HTTPException(status_code=400, detail="Formato no soportado")
+    contents = await file.read()
+    return crud.preview_file_data(contents, file.filename)
+
 @app.get("/api/export/csv")
 def export_csv(db: Session = Depends(get_db)):
     items = crud.get_items(db)
