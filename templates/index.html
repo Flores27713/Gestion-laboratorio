@@ -545,15 +545,18 @@
         });
         const data = await res.json();
         if (res.ok) {
-          alert(`✅ Planilla cargada con éxito. ${data.imported || 0} nuevos artículos importados, ${data.updated || 0} actualizados.`);
-          closeUploadModal();
-          loadDashboard();
-          loadInventory();
+          const msg = `✅ Planilla "${input.files[0].name}" procesada con éxito.\n\n` +
+                      `📥 Nuevos artículos importados: ${data.imported || 0}\n` +
+                      `🔄 Artículos actualizados: ${data.updated || 0}\n\n` +
+                      `La página se recargará para mostrar los cambios.`;
+          alert(msg);
+          // Force full page reload to guarantee fresh data from PostgreSQL
+          window.location.reload();
         } else {
           alert('❌ Error: ' + (data.detail || 'No se pudo procesar el archivo.'));
         }
       } catch (err) {
-        alert('❌ Error de conexión al subir la planilla.');
+        alert('❌ Error de conexión al subir la planilla: ' + err.message);
       }
     }
 
