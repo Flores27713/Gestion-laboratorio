@@ -46,14 +46,53 @@
       box-shadow: 0 0 12px rgba(220, 38, 38, 0.4);
     }
     @media print {
-      body * { visibility: hidden; }
-      #printable-voucher, #printable-voucher * { visibility: visible; }
-      #printable-voucher {
-        position: absolute; left: 0; top: 0; width: 100%;
-        background: #ffffff !important; color: #000000 !important;
-        padding: 20px; border: none !important;
+      @page {
+        size: letter portrait;
+        margin: 8mm;
       }
-      .no-print { display: none !important; }
+      html, body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+      }
+      body > * {
+        display: none !important;
+      }
+      #voucher-modal {
+        display: block !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        backdrop-filter: none !important;
+      }
+      #voucher-modal > div {
+        max-width: 100% !important;
+        width: 100% !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+      }
+      #printable-voucher {
+        display: block !important;
+        width: 100% !important;
+        border: 2px solid #000000 !important;
+        padding: 24px !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+        box-sizing: border-box !important;
+        page-break-inside: avoid !important;
+      }
+      .no-print {
+        display: none !important;
+      }
     }
   </style>
 </head>
@@ -443,35 +482,44 @@
   <!-- Printable Voucher Modal -->
   <div id="voucher-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
     <div class="glass-panel max-w-2xl w-full p-6 rounded-3xl border border-neutral-700 space-y-4 max-h-[90vh] overflow-y-auto">
-      <div id="printable-voucher" class="bg-white text-black p-6 rounded-2xl border border-neutral-300 space-y-4">
-        <div class="flex justify-between items-start border-b border-black/20 pb-4">
+      <div id="printable-voucher" class="bg-white text-black p-6 rounded-2xl border border-neutral-400 space-y-4 font-sans text-xs">
+        <!-- Header -->
+        <div class="flex justify-between items-start border-b-2 border-black pb-3">
           <div>
-            <h2 class="text-xl font-extrabold text-black">FICHA DE SOLICITUD DE MATERIALES</h2>
-            <p class="text-xs text-neutral-600 font-bold">GESTIÓN DE LABORATORIO</p>
+            <h2 class="text-lg font-black tracking-wide text-black uppercase">SOLICITUD DE MATERIALES</h2>
+            <p class="text-[11px] font-bold text-neutral-700">GESTIÓN DE LABORATORIO • UNIVERSIDAD AUTÓNOMA DE CHILE</p>
           </div>
-          <div class="text-right">
-            <span id="v-code" class="text-base font-mono font-bold text-red-600 block">SOL-2026-001</span>
-            <span id="v-date" class="text-[11px] text-neutral-500 block">Fecha: --</span>
+          <div class="text-right flex flex-col items-end">
+            <!-- Logo Box -->
+            <div class="border border-red-700 bg-red-50 text-red-700 p-1.5 rounded text-[10px] font-bold text-center mb-1 leading-tight uppercase tracking-wider">
+              UNIVERSIDAD AUTÓNOMA<br><span class="text-[9px] font-medium text-neutral-800">DE CHILE</span>
+            </div>
+            <span id="v-code" class="text-xs font-mono font-bold text-red-600">SOL-2026-001</span>
+            <span id="v-date" class="text-[10px] text-neutral-500">Fecha: --</span>
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 text-xs border-b border-black/10 pb-3">
-          <div><strong>Solicitante:</strong> <span id="v-applicant">--</span></div>
-          <div><strong>RUT:</strong> <span id="v-rut">--</span></div>
-          <div><strong>Carrera:</strong> <span id="v-career">--</span></div>
-          <div><strong>Asignatura:</strong> <span id="v-course">--</span></div>
-          <div><strong>Profesor:</strong> <span id="v-professor">--</span></div>
-          <div><strong>Fecha Devolución:</strong> <span id="v-returndate">--</span></div>
+        <!-- Details Grid -->
+        <div class="space-y-1 text-xs leading-relaxed text-black pt-1">
+          <div><strong>Nombre responsable de grupo:</strong> <span id="v-applicant" class="font-semibold">--</span></div>
+          <div><strong>Docente a cargo:</strong> <span id="v-professor" class="font-semibold">--</span></div>
+          <div><strong>Carrera:</strong> <span id="v-career" class="font-semibold">--</span></div>
+          <div><strong>Rut:</strong> <span id="v-rut" class="font-semibold">--</span></div>
+          <div><strong>Fecha de solicitud:</strong> <span id="v-reqdate" class="font-semibold">--</span></div>
+          <div><strong>Actividad / Asignatura:</strong> <span id="v-course" class="font-semibold">--</span></div>
+          <div><strong>Fecha de devolución estimada:</strong> <span id="v-returndate" class="font-semibold">--</span></div>
         </div>
 
-        <div>
-          <h4 class="text-xs font-bold uppercase mb-2">Detalle de Materiales Entregados</h4>
-          <table class="w-full text-xs text-left border-collapse border border-black/20">
+        <!-- Table -->
+        <div class="pt-2">
+          <table class="w-full text-xs text-left border-collapse border border-black">
             <thead>
-              <tr class="bg-neutral-100 border-b border-black/20">
-                <th class="p-2 border-r border-black/20">#</th>
-                <th class="p-2 border-r border-black/20">Descripción del Artículo</th>
-                <th class="p-2 text-center">Cant.</th>
+              <tr class="bg-neutral-200 border-b border-black font-bold text-black uppercase text-[11px]">
+                <th class="p-1.5 border-r border-black text-center w-8">ID</th>
+                <th class="p-1.5 border-r border-black">Descripción</th>
+                <th class="p-1.5 border-r border-black text-center w-16">Cantidad</th>
+                <th class="p-1.5 border-r border-black text-center w-24">Observación</th>
+                <th class="p-1.5 text-center w-28">Check de devolución</th>
               </tr>
             </thead>
             <tbody id="v-items-tbody">
@@ -480,13 +528,20 @@
           </table>
         </div>
 
-        <div class="pt-12 grid grid-cols-2 gap-8 text-center text-xs">
-          <div class="border-t border-black pt-2 font-semibold">
-            Firma Solicitante<br><span class="text-[10px] font-normal text-neutral-500">(Recepcionó conforme)</span>
+        <!-- Signatures -->
+        <div class="pt-10 grid grid-cols-2 gap-12 text-center text-xs">
+          <div class="border-t border-black pt-1 font-bold">
+            Firma alumno responsable
           </div>
-          <div class="border-t border-black pt-2 font-semibold">
-            Firma Encargado Laboratorio<br><span class="text-[10px] font-normal text-neutral-500">(Autorizado y Entregado)</span>
+          <div class="border-t border-black pt-1 font-bold">
+            Firma Encargado laboratorio
           </div>
+        </div>
+
+        <!-- Footer Commitment Text -->
+        <div class="pt-4 border-t border-neutral-300 space-y-1 text-[10px] text-center font-bold uppercase text-neutral-800 leading-tight">
+          <p>ALUMNO SE COMPROMETEN A DEVOLVER MATERIALES DESCRITOS Y UTILIZARLOS DE FORMA RESPONSABLE.</p>
+          <p>ALUMNO SE COMPROMETEN A REALIZAR DEVOLUCIÓN DE ESTOS COMPONENTES A LO MÁS UN DÍA DESPUÉS DE SU PRESENTACIÓN FINAL.</p>
         </div>
       </div>
 
@@ -815,24 +870,49 @@
     }
 
     function openVoucher(data) {
+      const dateStr = data.created_at ? data.created_at.split('T')[0] : (data.date || new Date().toISOString().split('T')[0]);
       document.getElementById('v-code').innerText = data.code;
-      document.getElementById('v-date').innerText = 'Fecha: ' + (data.created_at ? data.created_at.split('T')[0] : new Date().toISOString().split('T')[0]);
+      document.getElementById('v-date').innerText = 'Fecha: ' + dateStr;
       document.getElementById('v-applicant').innerText = data.applicant;
       document.getElementById('v-rut').innerText = data.rut;
       document.getElementById('v-career').innerText = data.career;
+      document.getElementById('v-professor').innerText = data.professor || 'No especificado';
+      document.getElementById('v-reqdate').innerText = dateStr;
       document.getElementById('v-course').innerText = data.course;
-      document.getElementById('v-professor').innerText = data.professor;
       document.getElementById('v-returndate').innerText = data.return_date;
 
       const tbody = document.getElementById('v-items-tbody');
-      tbody.innerHTML = data.items.map((item, idx) => `
-        <tr class="border-b border-black/10">
-          <td class="p-2 border-r border-black/20 text-center font-bold">${idx + 1}</td>
-          <td class="p-2 border-r border-black/20">${item.item_name}</td>
-          <td class="p-2 text-center font-mono font-bold">${item.quantity}</td>
-        </tr>
-      `).join('');
+      let rowsHtml = '';
+      
+      // Render requested items
+      data.items.forEach((item, idx) => {
+        rowsHtml += `
+          <tr class="border-b border-black text-[11px]">
+            <td class="p-1.5 border-r border-black text-center font-bold">${idx + 1}</td>
+            <td class="p-1.5 border-r border-black font-semibold text-black">${item.item_name}</td>
+            <td class="p-1.5 border-r border-black text-center font-mono font-bold">${item.quantity}</td>
+            <td class="p-1.5 border-r border-black text-center text-neutral-400">______</td>
+            <td class="p-1.5 text-center text-neutral-400 font-mono">[   ]</td>
+          </tr>
+        `;
+      });
 
+      // Pad up to 8 rows for official document appearance
+      const padRows = Math.max(0, 8 - data.items.length);
+      for (let i = 0; i < padRows; i++) {
+        const rowIdx = data.items.length + i + 1;
+        rowsHtml += `
+          <tr class="border-b border-black text-[11px]">
+            <td class="p-1.5 border-r border-black text-center text-neutral-400 font-mono">${rowIdx}</td>
+            <td class="p-1.5 border-r border-black">&nbsp;</td>
+            <td class="p-1.5 border-r border-black">&nbsp;</td>
+            <td class="p-1.5 border-r border-black">&nbsp;</td>
+            <td class="p-1.5 text-center text-neutral-400 font-mono">[   ]</td>
+          </tr>
+        `;
+      }
+
+      tbody.innerHTML = rowsHtml;
       document.getElementById('voucher-modal').classList.remove('hidden');
     }
 
